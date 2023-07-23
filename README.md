@@ -1,8 +1,9 @@
 # rocketChat-To-MatterMost
- convert posts from rocketChattoMattermost (so far)
+ convert posts from a rocketChat messages csv export to Mattermost import format(so far)
  - attachments are supported if "filesystem type"
  - docker version supported
- - [Github Repo](https://github.com/rivendellstuff/rocketchat)
+ - initially was to be more automated then ended up getting there quicker this way
+ - [Github Repo](https://github.com/rivendellstuff/rocketchat-to-mattermost)
 
 # description
 - RocketChat stores data in MongoDB
@@ -26,7 +27,7 @@
 - generally use "include" if migrating users private conversations
 
 ```
-mattermost_import.py "teamName" "channelName" "[listOfUserIDsSeparateByCommas]" "mode(include|exclude) of userIds prior" "optional:attachmentRootDir" "optional:dockerAttachmentRootDir" "optional:fullPathToCsvFile"
+convert_rc_to_mattermost_import.py "teamName" "channelName" "[listOfUserIDsSeparateByCommas]" "mode(include|exclude) of userIds prior" "optional:attachmentRootDir" "optional:dockerAttachmentRootDir" "optional:fullPathToCsvFile"
 ```
 
 ## attachments
@@ -76,12 +77,12 @@ _id	_updatedAt	attachments	channels	editedAt	editedBy._id	editedBy.username	file
 >> this will get the only the entire conversation from the CSV between John and Jane
 
 ```
-python3 mattermost_import.py "mattermostteamnamealllowercasewithnospaces" "gw3t6wqweqweqfiqwqeqeqeqweqwar__gxyweeewqeqeqepgnqweqeqwe" "['Dwqweq12322311312h', 'b3swq2334eefs3z']" "include" "/mnt/server/chat/mattermost-uploads/legacy" "/uploads/legacy" "data.csv"
+python3 convert_rc_to_mattermost_import.py "mattermostteamnamealllowercasewithnospaces" "gw3t6wqweqweqfiqwqeqeqeqweqwar__gxyweeewqeqeqepgnqweqeqwe" "['Dwqweq12322311312h', 'b3swq2334eefs3z']" "include" "/mnt/server/chat/mattermost-uploads/legacy" "/uploads/legacy" "data.csv"
 ```
 ```
 for comparison:
 
-python3 mattermost_import.py "teamname" "channelname" "[listOfUserIDsSeparateByCommasOrOneRoomIdMaybe]" "mode(include|exclude) of userIds prior" "optional:attachmentRootDir" "optional:dockerAttachmentRootDir" "optional:fullPathToCsvFile"
+python3 convert_rc_to_mattermost_import.py "teamname" "channelname" "[listOfUserIDsSeparateByCommasOrOneRoomIdMaybe]" "mode(include|exclude) of userIds prior" "optional:attachmentRootDir" "optional:dockerAttachmentRootDir" "optional:fullPathToCsvFile"
 ```
 
 7. After processing (approx 5-10 mins for 5000 attachments totalling 15gig on AMD Ryzen7) you'll end up with a file called: ```posts.json```
