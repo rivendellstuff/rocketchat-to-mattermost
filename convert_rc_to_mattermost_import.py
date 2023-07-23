@@ -7,8 +7,8 @@ import ast
 import os
 
 def main():
-    if len(sys.argv) < 6 or len(sys.argv) > 8:
-        print("Usage: mattermost_import.py 'teamName' 'channelName' 'listOfUserIDs' 'mode' 'optional:rootDir' 'optional:dockerRootDir' 'optional:csvFilePath'")
+    if len(sys.argv) < 6 or len(sys.argv) > 9:
+        print("Usage: mattermost_import.py 'teamName' 'channelName' 'listOfUserIDs' 'mode' 'optional:rootDir' 'optional:dockerRootDir' 'optional:csvFilePath' 'optional:roomName'")
         return
 
     team_name = sys.argv[1]
@@ -17,7 +17,8 @@ def main():
     mode = sys.argv[4].lower()  # Mode can be 'exclude' or 'include'
     root_dir = sys.argv[5] if len(sys.argv) >= 6 else None  # Root directory for attachments
     docker_dir = sys.argv[6] if len(sys.argv) >= 7 else None  # Docker root directory for attachments
-    csv_file = sys.argv[7] if len(sys.argv) == 8 else 'data.csv'  # CSV file path
+    csv_file = sys.argv[7] if len(sys.argv) >= 8 else 'data.csv'  # CSV file path
+    roomId = sys.argv[8] if len(sys.argv) == 9 else None  # Room Id (rid)
 
     if mode != 'exclude' and mode != 'include':
         print("Invalid mode. Mode can be 'exclude' or 'include'.")
@@ -35,12 +36,15 @@ def main():
 
             user_id_matches = row['u._id'] in user_ids
 
-            if (mode == 'exclude' and user_id_matches) or (mode == 'include' and not user_id_matches):
-                continue
+            if roomId:
+                if row['rid'] != roomId:
+                    continue
+            else:
+                if (mode == 'exclude' and user_id_matches) or (mode == 'include' and not user_id_matches):
+                    continue
 
-            # Check if 'rid' contains all user IDs from the input list
-            if not all(uid in row['rid'] for uid in user_ids):
-                continue
+                if not all(uid in row['rid'] for uid in user_ids):
+                    continue
 
             timestamp = dateparser.parse(row['ts']).timestamp() * 1000  # Convert timestamp to epoch in milliseconds
 
@@ -72,7 +76,7 @@ def main():
                     new_file_path = root_dir + row['file.name']
                     os.rename(file_path, new_file_path)
                     
-                    attachment_path = (docker_dir if docker_dir else root_dir) + '/' + row['file.name']
+                    attachment_path = (docker_dir if docker_dir else root_dir) + row['file.name']
                     attachment = {
                         'path': attachment_path,
                         'id': row['file._id']

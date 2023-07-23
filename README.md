@@ -20,14 +20,16 @@
 - pandas ( pip install pandas )
 
 # usage
+- specify all optional args up to and including the last one you need (otherwise the ordering doesnt work or you need to specify variable= its simpler just to put values in and let them be ignored)
 - not specifying attachmentRootDir will ignore all attachments
 - not specifying dockerAttachmentRootDir will use attachmentRootDir as the source of truth for attachment locations
 - fullPathToCsvFile not specified will look for "data.csv" in same folder by default
 - mode(include|exclude) takes a literal string of "include" or "exclude". It's whether or not to include JUST the u._id specified in the CLI argument or to use all rows EXCEPT ones where those u._id match (i.e. all messages to one mattermost room except)
 - generally use "include" if migrating users private conversations
+- **important** if roomId is specified then the u._id comparison to the rid is not done and ALL messages for that roomId (rid) will be imported from all users
 
 ```
-convert_rc_to_mattermost_import.py "teamName" "channelName" "[listOfUserIDsSeparateByCommas]" "mode(include|exclude) of userIds prior" "optional:attachmentRootDir" "optional:dockerAttachmentRootDir" "optional:fullPathToCsvFile"
+convert_rc_to_mattermost_import.py "teamName" "channelName" "[listOfUserIDsSeparateByCommas]" "mode(include|exclude) of userIds prior" "optional:attachmentRootDir" "optional:dockerAttachmentRootDir" "optional:fullPathToCsvFile" "optional:roomId"
 ```
 
 ## attachments
