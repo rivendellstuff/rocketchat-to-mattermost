@@ -68,7 +68,7 @@ _id	_updatedAt	attachments	channels	editedAt	editedBy._id	editedBy.username	file
 ```
 3. Open the CSV and find the two users whose conversation you want to import
 4. Note both users: u._id
-5. If also migrating attachments: you will want to make a COPY of your rocketchat attachments folder. This will be permanent copy for legacy attachments in mattermost so put it somehwere that makes sense and is accessible to this script (and the docker image if running Mattermost in Docker) e.g: ```cp -rf /volume1/chat/rocketchat_uploads /volume1/chat/mattermost_uploads/legacy```
+5. If also migrating attachments: you will want to make a COPY of your rocketchat attachments folder. This will be used to rename and import properly named and typed files for legacy attachments in mattermost so put it somehwere that makes sense and is accessible to this script (and the docker image if running Mattermost in Docker) e.g: ```cp -rf /volume1/chat/rocketchat_uploads /volume1/chat/mattermost_uploads/legacy```
 6. Create your posts.json file: (note: "/uploads/legacy" is optional for attchments as I'm using Mattermost in Docker I need to provide the docker OS the link to the same place from its perspective) where:
 >> Dwqweq12322311312h is the u._id of username 'john' (from RC exported CSV)
 
