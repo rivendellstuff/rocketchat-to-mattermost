@@ -67,6 +67,8 @@ def main():
                 # Add a trailing slash to the root directory if it's not there
                 if root_dir[-1] != '/':
                     root_dir += '/'
+                if docker_dir[-1] != '/':
+                    docker_dir += '/'                    
 
                 file_path = root_dir + row['file._id']
 
